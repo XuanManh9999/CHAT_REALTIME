@@ -3,3 +3,58 @@ socket.io-client
 socket.io
 -- Thư viện mã hóa
 Node-rsa
+Ý tưởng:
+Người dùng có thể đăng nhập tài khoản của mình vào một ứng dụng chat.
+Sau đó người dùng có thể join phòng chat
+tiến hành chat với nhau. Account tạo sẽ có quyền kick thành viên ra.
+Mỗi lần chat thì người trong phòng chat sẽ nhận được tin nhắn và phản hồi.
+Ngoài ra người dùng có thể thoát khỏi phòng.
+-- database
+CREATE TABLE userAccount (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255),
+    fullName VARCHAR(255),
+    password VARCHAR(255),
+    age INT,
+    avatar VARCHAR(255),
+    address VARCHAR(255),
+    `desc` TEXT,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+CREATE TABLE Department (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fullName VARCHAR(255),
+    author VARCHAR(255),
+    `desc` TEXT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updateAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    idUser int,
+    FOREIGN KEY (idUser) REFERENCES userAccount(id)
+);
+CREATE TABLE userSendMessageInDepartment (
+    idUser INT,
+    idDepartment INT,
+    message TEXT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updateAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (idUser) REFERENCES userAccount(id),
+    FOREIGN KEY (idDepartment) REFERENCES department(id)
+);
+CREATE TABLE userChatFriend (
+    idUser1 INT,
+    idUser2 INT,
+    message TEXT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updateAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (idUser1) REFERENCES userAccount(id),
+    FOREIGN KEY (idUser2) REFERENCES userAccount(id)
+);
+CREATE TABLE userFriend (
+    idMy INT,
+    idFriend INT,
+    createAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updateAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (idMy) REFERENCES userAccount(id),
+    FOREIGN KEY (idFriend) REFERENCES userAccount(id)
+);
