@@ -1,0 +1,5 @@
+-- Thư viện chat
+socket.io-client
+socket.io
+-- Thư viện mã hóa
+Node-rsa
