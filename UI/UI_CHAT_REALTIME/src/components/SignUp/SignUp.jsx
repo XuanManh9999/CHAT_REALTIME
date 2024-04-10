@@ -1,6 +1,8 @@
-import './Login.css'
+import './SignUp.css'
+import { Link } from 'react-router-dom';
 
-function Login() {
+
+function Signup() {
     
     const InputIcon = ({ path }) => (
         <svg
@@ -31,14 +33,16 @@ function Login() {
             <div className="card">
             <div className="card2">
                 <form className="form">
-                    <p id="heading">Đăng nhập</p>
-                    <InputField type="text" placeholder="username" />
-                    <InputField type="password" placeholder="password" />
-                    <div className="btn">
-                        <button className="button1">Đăng nhập</button>
-                        <button className="button2">Đăng kí</button>
+                    <p id="heading">Đăng ký</p>
+                    <InputField type="email" placeholder="Email" />
+                    <InputField type="text" placeholder="Username" />
+                    <InputField type="password" placeholder="Password" />
+                    <InputField type="password" placeholder="Confirm Password" />
+                    <div className="btns">
+                        <button className="button1s">Đăng ký</button>
+                        <Link to="/" className="button2s">Thoát</Link>
                     </div>
-                    <button className="button3">Quên mật khẩu</button>
+                    
                 </form>
             </div>
         </div>
@@ -46,4 +50,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default Signup;
