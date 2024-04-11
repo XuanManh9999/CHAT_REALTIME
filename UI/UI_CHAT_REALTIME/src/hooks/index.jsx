@@ -6,5 +6,5 @@ export { default as UsePutApi } from "./RESTfulAPI/UsePutApi";
 export { default as UseDeleteApi } from "./RESTfulAPI/UseDeleteApi";
 
 // Chat
-export { default as Send } from "./HendleChat/Send";
-export { default as Receive } from "./HendleChat/Receive";
+// export { default as Send } from "./HendleChat/Send";
+// export { default as Receive } from "./HendleChat/Receive";
