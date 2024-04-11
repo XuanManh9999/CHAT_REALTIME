@@ -18,3 +18,12 @@ export const register = async (data) => {
     return err;
   }
 };
+
+export const forgotPass = async (data) => {
+  try {
+    const response = await axios.post(`${url}/forgot-password`, data);
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
