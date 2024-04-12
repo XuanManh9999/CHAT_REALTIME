@@ -56,7 +56,12 @@ function Login() {
           });
         } else if (response?.status === 401) {
           toastMessage({
-            message: "Email hoặc mật khẩu không chính xác",
+            message: "Email không tồn tại trong hệ thống vui lòng kiểm tra lại",
+            state: "warning",
+          });
+        } else if (response?.status === 404) {
+          toastMessage({
+            message: "Mật khẩu không chính xác. Vui lòng kiểm tra lại",
             state: "warning",
           });
         } else if (response?.status === 500) {
