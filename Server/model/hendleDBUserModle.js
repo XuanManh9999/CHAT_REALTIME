@@ -1,6 +1,5 @@
 import { pool } from "../config/connectDB.js";
 import nodemailer from "nodemailer";
-
 import bcrypt from "bcrypt";
 
 export const getAllUsers = () =>
@@ -35,18 +34,32 @@ export const getUser = (id) =>
   });
 
 export const addUser = (data) => {
-  const { email, password, age, avatar, address, desc } = data;
-  const hash = bcrypt.hashSync(password, +process.env.SALT_ROUNDS);
+  const { email, password, username } = data;
+  const hash = bcrypt.hashSync(password, +process.env.salt);
   return new Promise(async (resolve, reject) => {
     try {
-      await pool.execute(
-        "insert into useraccount (email, password, age, avatar, address, desc) values (?, ?, ?, ?, ?, ?)",
-        [email, hash, age, avatar, address, desc]
+      // check email
+
+      const [results] = await pool.execute(
+        "select * from useraccount where email = ?",
+        [email]
       );
-      resolve({
-        status: 200,
-        message: "User added.",
-      });
+      if (results.length > 0) {
+        resolve({
+          status: 401,
+          message: "Email already exists.",
+        });
+      } else {
+        await pool.execute(
+          "insert into useraccount (email, fullName, password) values (?, ?, ?)",
+          [email, username, hash]
+        );
+
+        resolve({
+          status: 200,
+          message: "User added.",
+        });
+      }
     } catch (err) {
       reject(err);
     }
@@ -99,7 +112,11 @@ export const login = (data) => {
           message: "User not found.",
         });
       }
-      const IsCheckPassword = bcrypt.compareSync(password, results[0].password);
+      const IsCheckPassword = bcrypt.compareSync(
+        password,
+        results[0].password,
+        process.env.salt
+      );
       // so sánh password
       if (!IsCheckPassword) {
         resolve({
@@ -124,6 +141,7 @@ export const login = (data) => {
 export const ForgotPassword = (email) => {
   return new Promise(async (resolve, reject) => {
     try {
+      // check email
       const [results] = await pool.execute(
         "select * from useraccount where email = ?",
         [email]
@@ -134,30 +152,80 @@ export const ForgotPassword = (email) => {
           message: "User not found.",
         });
       }
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "", // email của bạn
-          pass: "", // mật khẩu của bạn
-        },
-      });
-      const mailOptions = {
-        from: "", // email của bạn
-        to: email,
-        subject: "Reset password",
-        text: "That was easy!",
-      };
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("Email sent: " + info.response);
-        }
-      });
-      resolve({
-        status: 200,
-        message: "Email sent.",
-      });
+      // random password
+      const randomPassword = Math.random().toString(36).slice(-8);
+
+      const hash = bcrypt.hashSync(randomPassword, +process.env.salt);
+
+      const [result] = await pool.execute(
+        "update useraccount set password = ? where email = ?",
+        [hash, email]
+      );
+      if (result?.changedRows > 0) {
+        // send email
+        const hendleEmail = async (email, results) => {
+          try {
+            const transporter = nodemailer.createTransport({
+              host: "smtp.gmail.com",
+              port: 465,
+              secure: true,
+              auth: {
+                user: process.env.EMAIL_USER_NAME,
+                pass: process.env.EMAIL_PASSWORD,
+              },
+            });
+            const info = await transporter.sendMail({
+              from: '"APP CHAT REALTIME" <nguyenxuanmanh2992003@gmail.com>',
+              to: email,
+              subject: "Phản hồi yêu cầu quên mật khẩu",
+              html: `
+                <div
+                  style="
+                    font-family: Arial, sans-serif;
+                    max-width: 600px;
+                    margin: auto;
+                    padding: 20px;
+                    background-color: #f4f4f4;
+                    border-radius: 10px;
+                  "
+                >
+                  <h2 style="color: #333">Chào bạn ${results[0].fullName}.</h2>
+  
+                  <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu của bạn:</p>
+  
+                  <p style="font-size: 18px; font-weight: bold; color: #009688">
+                    Mật khẩu mới của bạn là: <span style="color: #2196f3">${randomPassword}</span>.
+                    Bạn nên đăng nhập rồi đổi mật khẩu ngay sau khi đăng nhập.
+                    </p>
+  
+                  <p>
+                    Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi. Nếu bạn
+                    không phải là người yêu cầu đặt lại mật khẩu, vui lòng liên hệ
+                    ngay với đội hỗ trợ của chúng tôi. Qua số điện thoại: <strong> <a href="tel:0559517003">0559517003</a></strong>
+                  </p>
+  
+                  <p style="margin-top: 20px">Trân trọng,</p>
+                  <p style="font-weight: bold">Nguyễn Xuân Mạnh</p>
+                </div>
+              `,
+            });
+            return info;
+          } catch (error) {
+            throw error;
+          }
+        };
+        await hendleEmail(email, results);
+
+        resolve({
+          status: 200,
+          message: "Email sent.",
+        });
+      } else {
+        resolve({
+          status: 500,
+          message: "An error occurred while trying to send email.",
+        });
+      }
     } catch (err) {
       reject(err);
     }

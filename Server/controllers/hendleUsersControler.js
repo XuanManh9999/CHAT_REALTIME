@@ -44,8 +44,8 @@ const getUser = async (req, res) => {
 
 const addUser = async (req, res) => {
   try {
-    const { email, password, age, avatar, address, desc } = req.body;
-    if (password && email && age && avatar && address && desc) {
+    const { email, password, username } = req.body;
+    if ((email, password, username)) {
       const user = await modlesUsers.addUser(req.body);
       return res.status(200).json(user);
     } else {
@@ -129,8 +129,8 @@ const ForgotPassword = async (req, res) => {
       const response = await modlesUsers.ForgotPassword(email);
       return res.status(200).json(response);
     } else {
-      return res.status(404).json({
-        status: 404,
+      return res.status(400).json({
+        status: 400,
         message: "The user has not entered enough information to continue",
       });
     }
