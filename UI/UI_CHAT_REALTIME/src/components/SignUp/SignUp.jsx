@@ -4,8 +4,9 @@ import { InputField } from "../../share";
 
 function Signup() {
   return (
-    <div className="box-login">
-      <div className="card">
+    <div className="box-3">
+      <div className="box-logins">
+      <div className="cards">
         <div className="card2">
           <form className="form">
             <p id="heading">Đăng ký</p>
@@ -22,6 +23,7 @@ function Signup() {
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 }
