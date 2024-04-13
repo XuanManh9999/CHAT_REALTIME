@@ -5,6 +5,11 @@ import { useState } from "react";
 import {} from "../../hooks";
 import { Container, toastMessage } from "../../share";
 import { login } from "../../api";
+import { useNavigate } from "react-router-dom";
+// redux
+import { useDispatch } from "react-redux";
+
+import { ACTIONS_APP } from "../../redux/actions";
 
 const validateData = ({ email, password }) => {
   const isFalse = false;
@@ -28,6 +33,9 @@ const validateData = ({ email, password }) => {
 // call api
 
 function Login() {
+  const nav = useNavigate();
+
+  const dispatch = useDispatch();
   const [inputData, setInputData] = useState({
     email: "",
     password: "",
@@ -42,13 +50,17 @@ function Login() {
     const isResult = validateData(inputData);
     if (isResult) {
       const response = await login(inputData);
+
       if (response !== null) {
         if (response?.status === 200) {
+          dispatch(ACTIONS_APP.userLogin(response.data[0]));
+
           toastMessage({
             message: "Đăng nhập thành công",
             state: "success",
           });
           setInputData({ email: "", password: "" });
+          nav("/fake");
         } else if (response?.status === 400) {
           toastMessage({
             message: "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại",
@@ -115,3 +127,20 @@ function Login() {
 }
 
 export default Login;
+
+// {
+//   "user": {
+//       "user": {
+//           "id": 14,
+//           "email": "20210864@eaut.edu.vn",
+//           "fullName": "Duy123",
+//           "password": "$2b$12$SZRvHGAI.pJuRpRp9xIjW.1mxtZ.E2KhZ.Dgiq.c41Kmf2yfUZ1vy",
+//           "age": null,
+//           "avatar": null,
+//           "address": null,
+//           "desc": null,
+//           "createdAt": "2024-04-12T03:31:49.000Z",
+//           "updatedAt": "2024-04-12T03:31:49.000Z"
+//       }
+//   }
+// }
