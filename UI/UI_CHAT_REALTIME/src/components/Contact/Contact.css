@@ -1,0 +1,51 @@
+.img-user{
+    width: 230px !important;
+    border-radius: 20px;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+.form-body{
+    width: 900px !important; 
+}
+.heading{
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+.icon-user{
+    display: flex;
+    gap: 20px;
+    width: 40px;
+    background: skyblue;
+    height: 40px;
+    align-items: center;
+    justify-content: center !important;
+    color: white;
+    cursor: pointer;
+    border-radius: 10px;
+    margin: 20px 20px 20px 0;
+}
+
+.back-body{
+    background: rgb(66 66 66);
+    color: white !important;
+}
+.desc{
+    color: rgb(208, 208, 208) !important;
+}
+
+.back-contact{
+    background-image: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%);
+}
+
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #f6d365;
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1));
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right bottom, rgba(246, 211, 101, 1), rgba(253, 160, 133, 1))
+    }

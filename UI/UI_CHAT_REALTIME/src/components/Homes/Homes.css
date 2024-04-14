@@ -102,34 +102,25 @@ body{
     border-radius: 50%
 }
 .mess-block{
-    position: absolute;
-    
+    position: absolute !important;
     display: flex;
-    
+    align-items: center;
+    justify-content: center;
     bottom: 30px;
 }
 .input-mess{
-    width: 950px;
+    width: 950px !important;
+    height: 35px;
+    border: 1px solid rgb(208, 208, 208);
+    padding: 5px 7px;
 }
-@media (max-width: 1920px) {
-    .input-mess {
-      width: 1000px; /* Đặt chiều rộng là 100% khi màn hình nhỏ hơn 768px */
-    }
-  }
-  
-  @media (max-width: 1184px) {
-    .input-mess {
-      width: 750px; /* Đặt chiều rộng là 80% khi màn hình nhỏ hơn 992px */
-    }
-    
-  }
-  @media (max-width: 1000px) {
-    .input-mess {
-      width: 600px; /* Đặt chiều rộng là 80% khi màn hình nhỏ hơn 992px */
-    }
-    
-  }
-  
+
+.form-controlp{
+    height: 30px;
+    padding: 5px 7px;
+    border: 1px solid rgb(197, 197, 197);
+    margin-left: 10px;
+}
 
 .people-list img {
     float: left;
