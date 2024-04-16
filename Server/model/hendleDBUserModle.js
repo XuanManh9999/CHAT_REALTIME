@@ -2,10 +2,13 @@ import { pool } from "../config/connectDB.js";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
 
-export const getAllUsers = () =>
+export const getAllUsers = (id) =>
   new Promise(async (resolve, reject) => {
     try {
-      const [results] = await pool.execute("select * from useraccount");
+      const [results] = await pool.execute(
+        "select * from useraccount where id != ?",
+        [id]
+      );
       resolve({
         status: 200,
         message: "All users.",
@@ -120,7 +123,7 @@ export const login = (data) => {
       // so sánh password
       if (!IsCheckPassword) {
         resolve({
-          status: 401,
+          status: 404,
           message: "Password is incorrect.",
         });
       }

@@ -1,19 +1,21 @@
 import * as modlesUsers from "../model/hendleDBUserModle.js";
 
-const getAllUsers = async (_, res) => {
+const getAllUsers = async (req, res) => {
   try {
-    const users = await modlesUsers.getAllUsers();
-    if (users.length === 0) {
-      return res.status(404).json({
-        status: 404,
-        message: "No user found.",
+    const id = req.query?.id;
+    if (id !== "undefined" && id) {
+      const users = await modlesUsers.getAllUsers(id);
+      return res.status(200).json({
+        status: 200,
+        message: "All users.",
+        data: users,
+      });
+    } else {
+      return res.status(400).json({
+        status: 400,
+        message: "Id is required.",
       });
     }
-    return res.status(200).json({
-      status: 200,
-      message: "All users.",
-      data: users,
-    });
   } catch (err) {
     return res.status(500).json({
       status: 500,
