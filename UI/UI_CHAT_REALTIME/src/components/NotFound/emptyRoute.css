@@ -1,6 +1,7 @@
-main {
+.main-not-found {
     width: 100vw;
+    height: 100vh;
 }
-.title{
+.title-not-found {
     text-align: center;
 }

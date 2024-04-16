@@ -88,8 +88,9 @@ function Signup() {
   };
 
   return (
-    <div className="box-login">
-      <div className="card">
+    <div className="box-3">
+      <div className="box-logins">
+      <div className="cards">
         <div className="card2">
           <div className="form">
             <p id="heading">Đăng ký</p>
@@ -133,6 +134,7 @@ function Signup() {
         </div>
       </div>
       <Container />
+    </div>
     </div>
   );
 }

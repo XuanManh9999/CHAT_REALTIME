@@ -1,8 +1,8 @@
 import "./emptyRoute.css";
 function NotFound() {
   return (
-    <main>
-      <h1 className="title">404 Not Found</h1>
+    <main className="main-not-found">
+      <h1 className="title-not-found">404 Not Found</h1>
     </main>
   );
 }

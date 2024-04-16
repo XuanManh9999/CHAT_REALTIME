@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Login, Signup, ForgotPass, Fake, NotFound } from "./components";
 import { useSelector } from "react-redux";
 import { selectorUser } from "./redux/selector";
+
+import { Login, Signup, ForgotPass, NotFound, Homes } from "./components";
 
 function App() {
   const data = useSelector(selectorUser);
@@ -12,7 +13,8 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgotpass" element={<ForgotPass />} />
-        {data?.user && <Route path="/fake" element={<Fake />} />}
+        {/* data?.user && */}
+        {<Route path="/home" element={<Homes />} />}
       </Routes>
     </Router>
   );

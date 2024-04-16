@@ -1,11 +1,10 @@
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { InputField } from "../../share";
 import { useState } from "react";
 import {} from "../../hooks";
 import { Container, toastMessage } from "../../share";
 import { login } from "../../api";
-import { useNavigate } from "react-router-dom";
 // redux
 import { useDispatch } from "react-redux";
 
@@ -33,9 +32,8 @@ const validateData = ({ email, password }) => {
 // call api
 
 function Login() {
-  const nav = useNavigate();
-
   const dispatch = useDispatch();
+  const nav = useNavigate();
   const [inputData, setInputData] = useState({
     email: "",
     password: "",
@@ -50,17 +48,17 @@ function Login() {
     const isResult = validateData(inputData);
     if (isResult) {
       const response = await login(inputData);
-
       if (response !== null) {
         if (response?.status === 200) {
-          dispatch(ACTIONS_APP.userLogin(response.data[0]));
-
+          dispatch(ACTIONS_APP.userLogin(response?.data[0]));
           toastMessage({
             message: "Đăng nhập thành công",
             state: "success",
           });
           setInputData({ email: "", password: "" });
-          nav("/fake");
+          setTimeout(() => {
+            nav("/home");
+          }, 500);
         } else if (response?.status === 400) {
           toastMessage({
             message: "Dữ liệu không hợp lệ. Vui lòng kiểm tra lại",
@@ -88,40 +86,42 @@ function Login() {
   };
 
   return (
-    <div className="box-login">
-      <div className="card">
-        <div className="card2">
-          <div className="form">
-            <p id="heading">Đăng nhập</p>
-            <InputField
-              value={inputData.email}
-              name={"email"}
-              onChange={hendleChangeInput}
-              type="email"
-              placeholder="Email"
-            />
-            <InputField
-              value={inputData.password}
-              type="password"
-              name={"password"}
-              onChange={hendleChangeInput}
-              placeholder="password"
-            />
-            <div className="btnl">
-              <button onClick={hendleLogin} className="button1l">
-                Đăng nhập
-              </button>
-              <Link to="/signup" className="button2l">
-                Đăng ký
+    <div className="box-2">
+      <div className="box-login">
+        <div className="cardl">
+          <div className="card2">
+            <div className="form">
+              <p id="heading">Đăng nhập</p>
+              <InputField
+                value={inputData.email}
+                name={"email"}
+                onChange={hendleChangeInput}
+                type="email"
+                placeholder="Email"
+              />
+              <InputField
+                value={inputData.password}
+                type="password"
+                name={"password"}
+                onChange={hendleChangeInput}
+                placeholder="password"
+              />
+              <div className="btnl">
+                <button onClick={hendleLogin} className="button1l">
+                  Đăng nhập
+                </button>
+                <Link to="/signup" className="button2l">
+                  Đăng ký
+                </Link>
+              </div>
+              <Link to="/forgotpass" className="button3l">
+                Quên mật khẩu
               </Link>
             </div>
-            <Link to="/forgotpass" className="button3l">
-              Quên mật khẩu
-            </Link>
           </div>
         </div>
+        <Container />
       </div>
-      <Container />
     </div>
   );
 }
