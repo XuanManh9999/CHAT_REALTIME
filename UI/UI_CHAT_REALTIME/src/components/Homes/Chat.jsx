@@ -1,12 +1,11 @@
 import "./Homes.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-   
     faVideo,
     faPhone,
     faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { Link } from "react-router-dom";
 
 const messages = [
     {
@@ -30,37 +29,32 @@ const messages = [
     },
 ];
 
-
-
 function Chat() {
     return (
         <>
             <div className="">
                 <div className="row clearfix">
                     <div className="col-lg-12">
-                        <div className="card chat-app">                            
+                        <div className="card chat-app">
                             <div className="chat">
                                 <div className="chat-header">
                                     <div className="header-chat">
                                         <div className="avata-chat">
-                                            <a>
+                                            <Link to="/profile">
                                                 <img
                                                     src="https://www.site.pt/wp-content/uploads/2022/01/o-que-e-php-845x480.jpg"
                                                     alt="avatar"
                                                 />
-                                            </a>
+                                            </Link>
                                             <div className="chat-about">
-                                                <h6 className="m-b-0 name-avatar">
-                                                    PHP & LARAVEL
-                                                </h6>
+                                                <Link to="/profile">
+                                                    <h6 className="m-b-0 name-avatar">
+                                                        PHP & LARAVEL
+                                                    </h6>
+                                                </Link>
                                                 <small>
                                                     Last seen: 2 hours ago
                                                 </small>
-                                            </div>
-                                            <div className="update-info">
-                                                <button className="btn-info">
-                                                    Update Information
-                                                </button>
                                             </div>
                                         </div>
 
@@ -139,8 +133,6 @@ function Chat() {
                     </div>
                 </div>
             </div>
-            
-            
         </>
     );
 }
