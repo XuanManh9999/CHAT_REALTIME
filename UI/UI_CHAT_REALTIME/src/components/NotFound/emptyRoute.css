@@ -1,7 +1,10 @@
+
 .main-not-found {
-    width: 100vw;
     height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .title-not-found {
-    text-align: center;
+    font-weight: 900;
 }

@@ -1,2 +1,2 @@
 // selector user
-export const selectorUser = (state) => state.accountLogin;
+export const selectorUser = (state) => state.accountLogin.user;

@@ -27,3 +27,12 @@ export const forgotPass = async (data) => {
     return err;
   }
 };
+
+export const allUsers = async (id) => {
+  try {
+    const response = await axios.get(`${url}/all-user?id=${id}`);
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
