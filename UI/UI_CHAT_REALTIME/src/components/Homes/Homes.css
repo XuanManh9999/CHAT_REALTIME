@@ -186,31 +186,7 @@ body{
     transition: 0.4s;
     
 }
-.update-info{
-    display: none;
-    position: absolute;
-    
-    
-}
-.avata-chat:hover .update-info{
-    display: block;
-    top: 50px;
-    left: 0px;
 
-}
-.btn-info{
-    
-    padding: 10px 24px;
-    background: rgb(243, 243, 243);
-    font-size: 16px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-}
-.btn-info:hover{
-    cursor: pointer;
-    color: white;
-    background-color: #e47297;
-}
 
 .name-avatar{
     font-size: 16px;

@@ -2,7 +2,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectorUser } from "./redux/selector";
 
-import { Login, Signup, ForgotPass, Homes, Contact } from "./components";
+import {
+  Login,
+  Signup,
+  ForgotPass,
+  Homes,
+  Contact,
+  NotFound,
+} from "./components";
 
 function App() {
   return (
@@ -13,6 +20,7 @@ function App() {
         <Route path="/forgotpass" element={<ForgotPass />} />
         <Route path="/home" element={<Homes />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
