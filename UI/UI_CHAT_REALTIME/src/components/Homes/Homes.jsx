@@ -1,9 +1,7 @@
 import "./Homes.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector } from "react-redux";
-import JSEncrypt from "jsencrypt";
 import { io } from "socket.io-client";
-import * as Bundle from "../../../bundle.js";
 // Sử dụng NodeRSA như bình thường
 import {
   faSearch,
@@ -72,7 +70,6 @@ const contacts = [
 ];
 const socket = io("http://localhost:5000");
 function Homes() {
-  const rsaKey = new Bundle.NodeRSA();
   const [message, setMessage] = useState("");
   const [keyPublic, setkeyPublic] = useState(null);
 
@@ -109,11 +106,6 @@ function Homes() {
       console.log(encryptedMessage);
       socket.emit("chat message", encryptedMessage);
       setMessage("");
-
-      // const encryptedMessage = decrypt.encrypt(message);
-      // console.log(encryptedMessage);
-      // socket.emit("chat message", encryptedMessage);
-      // setMessage("");
     }
   };
   return (

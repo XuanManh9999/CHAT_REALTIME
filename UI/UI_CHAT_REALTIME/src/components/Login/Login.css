@@ -6,9 +6,9 @@ body{
     flex-direction: column;
     gap: 10px;
     
-    padding-bottom: 0.4em;
+ 
     
-    border-radius: 20px;
+
 }
 
 #heading {
