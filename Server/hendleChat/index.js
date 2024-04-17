@@ -2,21 +2,10 @@
 const hendleChat = (io, key) => {
   io.on("connection", (socket) => {
     console.log("A user connected");
-
-    // Gửi khóa công khai đến client
-    socket.emit("publicKey", key.exportKey("public"));
-
-    // Nhận tin nhắn từ client và giải mã
-    socket.on("chat message", (encryptedMessage) => {
-      try {
-        const decryptedMessage = key.decrypt(encryptedMessage, "utf8");
-        console.log("Received message:", decryptedMessage);
-
-        // Gửi tin nhắn đã giải mã đến tất cả các client khác
-        io.emit("message", decryptedMessage);
-      } catch (error) {
-        console.error("Error during decryption:", error);
-      }
+    socket.on("chat message", (data) => {
+      const { from, to, message } = data;
+      // Xử lý tin nhắn và gửi đến người nhận
+      io.emit(`message-${to}`, { from, message });
     });
 
     socket.on("disconnect", () => {

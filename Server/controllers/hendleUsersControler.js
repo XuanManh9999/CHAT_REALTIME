@@ -206,9 +206,9 @@ const getFriends = async (req, res) => {
 
 const getDataChat = async (req, res) => {
   try {
-    const { id, idFriend } = req.body;
+    const { id, idFriend } = req.query;
     if (id && idFriend) {
-      const user = await modlesUsers.getDataChat(req.body);
+      const user = await modlesUsers.getDataChat(id, idFriend);
       return res.status(200).json(user);
     } else {
       return res.status(400).json({
@@ -220,6 +220,26 @@ const getDataChat = async (req, res) => {
     return res.status(500).json({
       status: 500,
       message: "An error occurred while trying to get data chat.",
+    });
+  }
+};
+
+const createChat = async (req, res) => {
+  try {
+    const { idUser, idFriend, message } = req.body;
+    if (idUser && idFriend && message) {
+      const user = await modlesUsers.createChat(req.body);
+      return res.status(200).json(user);
+    } else {
+      return res.status(400).json({
+        status: 400,
+        message: "data are required.",
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      status: 500,
+      message: "An error occurred while trying to create chat.",
     });
   }
 };
@@ -264,6 +284,46 @@ const deleteGroup = async (req, res) => {
   }
 };
 
+const setOnline = async (req, res) => {
+  try {
+    const id = req.body?.id;
+    if (id) {
+      const result = await modlesUsers.setOnline(id);
+      return res.status(200).json(result);
+    } else {
+      return res.status(400).json({
+        status: 400,
+        message: "Id is required.",
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      status: 500,
+      message: "An error occurred while trying to set online.",
+    });
+  }
+};
+
+const setOffline = async (req, res) => {
+  try {
+    const id = req.body?.id;
+    if (id) {
+      const result = await modlesUsers.setOffline(id);
+      return res.status(200).json(result);
+    } else {
+      return res.status(400).json({
+        status: 400,
+        message: "Id is required.",
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({
+      status: 500,
+      message: "An error occurred while trying to set online.",
+    });
+  }
+};
+
 export {
   getAllUsers,
   getUser,
@@ -278,4 +338,7 @@ export {
   getDataChat,
   createGroup,
   deleteGroup,
+  setOffline,
+  setOnline,
+  createChat
 };

@@ -304,12 +304,11 @@ export const getFriends = (id) =>
     }
   });
 
-export const getDataChat = (data) => {
-  const { id, idFriend } = data;
+export const getDataChat = (id, idFriend) => {
   return new Promise(async (resolve, reject) => {
     try {
       const [results] = await pool.execute(
-        "select * from chat where (id = ? and idFriend = ?) or (id = ? and idFriend = ?)",
+        "select * from userchatfriend where (idUser1 = ? and idUser2 = ?) or (idUser1 = ? and idUser2 = ?)",
         [id, idFriend, idFriend, id]
       );
       resolve({
@@ -360,6 +359,52 @@ export const deleteGroup = (data) => {
       resolve({
         status: 200,
         message: "Group deleted.",
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+export const setOnline = (id) => {
+  return new Promise((resolve, reject) => {
+    try {
+      pool.execute("update useraccount set online = 1 where id = ?", [id]);
+      resolve({
+        status: 200,
+        message: "User online.",
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+export const setOffline = (id) => {
+  return new Promise((resolve, reject) => {
+    try {
+      pool.execute("update useraccount set online = 0 where id = ?", [id]);
+      resolve({
+        status: 200,
+        message: "User offline.",
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+export const createChat = (data) => {
+  const { idUser, idFriend, message } = data;
+  return new Promise(async (resolve, reject) => {
+    try {
+      await pool.execute(
+        "insert into userchatfriend (idUser1, idUser2, message) values (?, ?, ?)",
+        [idUser, idFriend, message]
+      );
+      resolve({
+        status: 200,
+        message: "Chat created.",
       });
     } catch (err) {
       reject(err);
