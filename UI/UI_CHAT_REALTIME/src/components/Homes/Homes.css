@@ -87,7 +87,6 @@ body{
 }
 
 .people-list .chat-list li.active {
-    background: rgb(0, 0, 255);
 }
 
 .people-list .chat-list li .name {

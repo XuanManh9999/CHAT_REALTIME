@@ -36,3 +36,41 @@ export const allUsers = async (id) => {
     return err;
   }
 };
+
+export const setOnline = async (id) => {
+  try {
+    const response = await axios.put(`${url}/set-online`, { id });
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const setOffline = async (id) => {
+  try {
+    const response = await axios.put(`${url}/set-offline`, { id });
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const getDataChat = async (id, idFriend) => {
+  try {
+    const response = await axios.get(
+      `${url}/data-chat?id=${id}&idFriend=${idFriend}`
+    );
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const createChat = async (data) => {
+  try {
+    const response = await axios.post(`${url}/create-chat`, data);
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};

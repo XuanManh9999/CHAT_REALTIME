@@ -2,9 +2,10 @@ import "./Homes.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faCircle } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
-import { allUsers } from "../../api";
-import { useSelector } from "react-redux";
+import { allUsers, setOnline } from "../../api";
+import { useSelector, useDispatch } from "react-redux";
 import { selectorUser } from "../../redux/selector";
+import { ACTIONS_APP } from "../../redux/actions";
 // const contacts = [
 //   {
 //     id: 1,
@@ -43,6 +44,7 @@ import { selectorUser } from "../../redux/selector";
 import { Container, toastMessage } from "../../share";
 
 function PeopleList() {
+  const dispatch = useDispatch();
   const [people, setPeople] = useState([]);
   const [showPostForm, setShowPostForm] = useState(false);
 
@@ -50,7 +52,21 @@ function PeopleList() {
   useEffect(() => {
     (async () => {
       try {
-        console.log("user", user?.id);
+        const response = await setOnline(user?.id);
+        if (response?.status === 200) {
+        } else if (response?.status === 400) {
+          toastMessage("error", "Id người dùng hiện tại không tồn tại");
+        }
+      } catch (err) {
+        toastMessage(
+          "error",
+          "Đã xảy ra lỗi từ phía server. Không thể set online"
+        );
+      }
+    })();
+
+    (async () => {
+      try {
         const response = await allUsers(user?.id);
         if (response?.status === 200) {
           setPeople(response?.data?.data);
@@ -69,7 +85,10 @@ function PeopleList() {
   const handlePostClick = () => {
     setShowPostForm(true);
   };
-  console.log(people);
+
+  const hendleChat = (person) => {
+    dispatch(ACTIONS_APP.selectFriend(person));
+  };
   return (
     <>
       <div className="col-lg-3">
@@ -95,6 +114,9 @@ function PeopleList() {
                       className={`clearfix ${
                         person?.online === 0 ? "active" : ""
                       }`}
+                      onClick={() => {
+                        hendleChat(person);
+                      }}
                     >
                       <img
                         src={
@@ -113,7 +135,7 @@ function PeopleList() {
                           <FontAwesomeIcon
                             icon={faCircle}
                             className={
-                              person?.online ? "text-success" : "text-secondary"
+                              person?.online === 1 ? "online" : "offline"
                             }
                           />{" "}
                           {person?.status}
