@@ -85,6 +85,11 @@ function Login() {
     }
   };
 
+  const hendleEnter = (e) => {
+    if (e.key === "Enter") {
+      hendleLogin();
+    }
+  };
   return (
     <div className="box-2">
       <div className="box-login">
@@ -98,6 +103,7 @@ function Login() {
                 onChange={hendleChangeInput}
                 type="email"
                 placeholder="Email"
+                hendleEnter={hendleEnter}
               />
               <InputField
                 value={inputData.password}
@@ -105,6 +111,7 @@ function Login() {
                 name={"password"}
                 onChange={hendleChangeInput}
                 placeholder="password"
+                hendleEnter={hendleEnter}
               />
               <div className="btnl">
                 <button onClick={hendleLogin} className="button1l">

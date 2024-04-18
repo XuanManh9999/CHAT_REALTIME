@@ -1,54 +1,19 @@
 import "./Homes.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faCircle } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { allUsers, setOnline } from "../../api";
 import { useSelector, useDispatch } from "react-redux";
 import { selectorUser } from "../../redux/selector";
 import { ACTIONS_APP } from "../../redux/actions";
-// const contacts = [
-//   {
-//     id: 1,
-//     name: "HTML CSS & JS",
-//     status: "left 7 mins ago",
-//     online: false,
-//     avatar:
-//       "https://p92.hu/binaries/content/gallery/p92website/technologies/htmlcssjs-overview.png",
-//   },
-//   {
-//     id: 2,
-//     name: "PHP & LARAVEL",
-//     status: "online",
-//     online: true,
-//     avatar:
-//       "https://www.site.pt/wp-content/uploads/2022/01/o-que-e-php-845x480.jpg",
-//   },
-//   {
-//     id: 3,
-//     name: "REACT JS",
-//     status: "online",
-//     online: false,
-//     avatar:
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcBiBI248rgjtRfFgxc8WapC-w7npSGPi6GnV1_VUMww&s",
-//   },
-//   {
-//     id: 4,
-//     name: "NODE JS",
-//     status: "left 10 hours ago",
-//     online: false,
-//     avatar:
-//       "https://static-00.iconduck.com/assets.00/node-js-icon-454x512-nztofx17.png",
-//   },
-// ];
-
-import { Container, toastMessage } from "../../share";
+import { Container } from "../../share";
 
 function PeopleList() {
   const dispatch = useDispatch();
   const [people, setPeople] = useState([]);
   const [showPostForm, setShowPostForm] = useState(false);
-
   const user = useSelector(selectorUser);
+
   useEffect(() => {
     (async () => {
       try {

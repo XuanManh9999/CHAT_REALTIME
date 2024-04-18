@@ -39,7 +39,10 @@ body{
     -webkit-transition: .5s;
     transition: .5s
 }
-
+.people-list .chat-list {
+    height: 400px;
+    overflow-y: scroll;
+}
 .people-list .chat-list li {
     padding: 10px 15px;
     list-style: none;
@@ -493,7 +496,12 @@ body{
 
 .list-message-chat {
     height: 370px;
-    overflow-y: scroll;
+     /* Thiết lập chiều dọc cuộn */
+  overflow-y: auto;
+  /* Thiết lập hành vi cuộn mềm mại */
+  scroll-behavior: smooth;
+  /* Đảm bảo danh sách tin nhắn được cuộn xuống dưới cùng khi mà dữ liệu đã được tải xong */
+  scroll-snap-type: y mandatory;
 }
 
 
