@@ -3,7 +3,6 @@ export const Context = createContext();
 
 function ContextApp({ children }) {
   const [userOnline, setUserOnline] = useState([]);
-
   return (
     <Context.Provider value={{ userOnline, setUserOnline }}>
       {children}

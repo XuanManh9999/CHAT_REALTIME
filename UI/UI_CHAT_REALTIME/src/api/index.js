@@ -74,3 +74,12 @@ export const createChat = async (data) => {
     return err;
   }
 };
+
+export const updateAccount = async (data) => {
+  try {
+    const response = await axios.put(`${url}/update-user`, data);
+    return response.data;
+  } catch (err) {
+    return err;
+  }
+};

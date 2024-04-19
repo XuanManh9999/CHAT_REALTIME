@@ -2,7 +2,6 @@ import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { InputField } from "../../share";
 import { useState } from "react";
-import {} from "../../hooks";
 import { Container, toastMessage } from "../../share";
 import { login } from "../../api";
 // redux
@@ -134,20 +133,3 @@ function Login() {
 }
 
 export default Login;
-
-// {
-//   "user": {
-//       "user": {
-//           "id": 14,
-//           "email": "20210864@eaut.edu.vn",
-//           "fullName": "Duy123",
-//           "password": "$2b$12$SZRvHGAI.pJuRpRp9xIjW.1mxtZ.E2KhZ.Dgiq.c41Kmf2yfUZ1vy",
-//           "age": null,
-//           "avatar": null,
-//           "address": null,
-//           "desc": null,
-//           "createdAt": "2024-04-12T03:31:49.000Z",
-//           "updatedAt": "2024-04-12T03:31:49.000Z"
-//       }
-//   }
-// }

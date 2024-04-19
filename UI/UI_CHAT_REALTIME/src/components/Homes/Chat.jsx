@@ -5,12 +5,15 @@ import {
   faPaperPlane,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useSelector } from "react-redux";
 import { selectorFriend, selectorUser } from "../../redux/selector";
-import { getDataChat, createChat } from "../../api";
+import { getDataChat, createChat, updateAccount } from "../../api";
+import { toastMessage, Container } from "../../share";
+import { Context } from "../ContextApi/Context";
+
 function formatMessageTime(isoDateString) {
   const date = new Date(isoDateString);
   const options = {
@@ -27,20 +30,33 @@ function formatMessageTime(isoDateString) {
 
 let socket;
 function Chat() {
+  const { setUserOnline } = useContext(Context);
+  const navigator = useNavigate();
   const user = useSelector(selectorUser);
   const friend = useSelector(selectorFriend);
   const [text, setText] = useState("");
   const [data, setData] = useState([]);
   const [showAccount, setShowAccount] = useState(false);
-
   const [mainAccount, setMainAccount] = useState(user);
+
+  const hendleMainUser = (e) => {
+    const { name, value } = e.target;
+    setMainAccount({ ...mainAccount, [name]: value });
+  };
   useEffect(() => {
-    socket = io("http://localhost:5000", { transports: ["websocket"] });
+    socket = io("http://localhost:5000");
+    socket.emit("join", { ...user, online: 1 });
     return () => {
       socket.disconnect();
     };
   }, []);
 
+  useEffect(() => {
+    socket.on("user-online", (data) => {
+      console.log("user-online-chat", data);
+      setUserOnline(data);
+    });
+  });
   useEffect(() => {
     if (user?.id && friend?.id) {
       (async () => {
@@ -69,6 +85,7 @@ function Chat() {
       ]);
     });
   }, [user?.id]);
+
   const hendleSend = async () => {
     if (text) {
       socket.emit(`chat message`, {
@@ -103,6 +120,32 @@ function Chat() {
   const hendleAccount = () => {
     setShowAccount(true);
   };
+
+  const hendleLogOut = async (e) => {
+    e.preventDefault();
+    const isCheck = confirm("Bạn có chắc chắn muốn đăng xuất không?");
+    if (isCheck) {
+      socket.emit("offline", user);
+    }
+    navigator("/");
+  };
+
+  const hendleUpdateAccount = async () => {
+    e.preventDefault();
+    const isCheck = confirm("Bạn có chắc chắn muốn cập nhật thông tin không?");
+    if (isCheck) {
+      const response = await updateAccount(mainAccount);
+      console.log(response);
+      if (response?.status === 200) {
+        // dispatch(ACTIONS_APP.userLogin(response?.data[0]));
+        toastMessage({
+          message: "Cập nhật thông tin thành công",
+          state: "success",
+        });
+      }
+    }
+  };
+
   return (
     <>
       {user?.id && friend?.id && (
@@ -128,7 +171,7 @@ function Chat() {
                           {friend?.fullName ? friend.fullName : "Undefine"}
                         </h6>
                       </Link>
-                      <small>Last seen: 2 hours ago</small>
+                      <small>{friend?.online === 1 ?  "Online": "Offline"}</small>
                     </div>
                   </div>
 
@@ -218,6 +261,7 @@ function Chat() {
               <div className="form-group">
                 <label>Email</label>
                 <input
+                  onChange={hendleMainUser}
                   type="email"
                   name="email"
                   value={mainAccount.email}
@@ -228,6 +272,7 @@ function Chat() {
               <div className="form-group">
                 <label>fullName</label>
                 <input
+                  onChange={hendleMainUser}
                   name="fullName"
                   type="text"
                   value={mainAccount.fullName}
@@ -237,6 +282,7 @@ function Chat() {
               <div className="form-group">
                 <label>Phone</label>
                 <input
+                  onChange={hendleMainUser}
                   name="phonenumber"
                   value={mainAccount.phonenumber ?? ""}
                   type="text"
@@ -246,8 +292,9 @@ function Chat() {
               <div className="form-group">
                 <label>DateOfBirth</label>
                 <input
+                  onChange={hendleMainUser}
                   name="dateofbirth"
-                  value={mainAccount.dateofbirth ?? ""} 
+                  value={mainAccount.dateofbirth ?? ""}
                   type="text"
                   className="form-controlp"
                 />
@@ -255,6 +302,7 @@ function Chat() {
               <div className="form-group">
                 <label>Age</label>
                 <input
+                  onChange={hendleMainUser}
                   name="age"
                   value={mainAccount.age ?? ""}
                   type="text"
@@ -263,16 +311,36 @@ function Chat() {
               </div>
               <div className="form-group">
                 <label>Avatar</label>
-                <input type="text" name="avatar" value={mainAccount.avatar} className="form-controlp" />
+                <input
+                  onChange={hendleMainUser}
+                  type="text"
+                  name="avatar"
+                  value={mainAccount.avatar}
+                  className="form-controlp"
+                />
               </div>
               <div className="form-group">
                 <label>Address</label>
-                <input name="address" value={mainAccount.address} type="text" className="form-controlp" />
+                <input
+                  onChange={hendleMainUser}
+                  name="address"
+                  value={mainAccount.address}
+                  type="text"
+                  className="form-controlp"
+                />
               </div>
-              <button type="submit" className="btn btn-success">
+              <button
+                type="submit"
+                onClick={hendleUpdateAccount}
+                className="btn btn-success"
+              >
                 Cập nhật thông tin
               </button>
-              <button type="submit" className="btn btn-success">
+              <button
+                type="submit"
+                onClick={hendleLogOut}
+                className="btn btn-secondary"
+              >
                 Đăng xuất
               </button>
               <button
@@ -287,6 +355,7 @@ function Chat() {
           </div>
         </div>
       )}
+      <Container />
     </>
   );
 }
