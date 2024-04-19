@@ -70,12 +70,32 @@ export const addUser = (data) => {
 };
 
 export const updateUser = (data) => {
-  const { id, email, password, age, avatar, address, desc } = data;
+  const {
+    id,
+    email,
+    password,
+    age,
+    avatar,
+    address,
+    desc,
+    phonenumber,
+    dateofbirth,
+  } = data;
   return new Promise(async (resolve, reject) => {
     try {
       await pool.execute(
-        "update useraccount set email = ?, password = ?, age = ?, avatar = ?, address = ?, desc = ? where id = ?",
-        [email, password, age, avatar, address, desc, id]
+        "update useraccount set email = ?, password = ?, age = ?, avatar = ?, address = ?, desc = ?, phonenumber = ?, dateofbirth = ? where id = ?",
+        [
+          email,
+          password,
+          age,
+          avatar,
+          address,
+          desc,
+          phonenumber,
+          dateofbirth,
+          id,
+        ]
       );
       resolve({
         status: 200,

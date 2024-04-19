@@ -66,16 +66,8 @@ const addUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { id, email, password, age, avatar, address, desc } = req.body;
-    if (id && password && email && age && avatar && address && desc) {
-      const user = await modlesUsers.updateUser(req.body);
-      return res.status(200).json(user);
-    } else {
-      return res.status(400).json({
-        status: 400,
-        message: "data are required.",
-      });
-    }
+    const user = await modlesUsers.updateUser(req.body);
+    return res.status(200).json(user);
   } catch (err) {
     return res.status(500).json({
       status: 500,
@@ -340,5 +332,5 @@ export {
   deleteGroup,
   setOffline,
   setOnline,
-  createChat
+  createChat,
 };
