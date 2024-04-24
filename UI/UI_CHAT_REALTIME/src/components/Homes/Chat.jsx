@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import bigInt from "big-integer";
 import {
   faVideo,
   faPhone,
@@ -27,7 +28,16 @@ function formatMessageTime(isoDateString) {
   };
   return date.toLocaleString("en-US", options);
 }
-
+// Hàm mã hóa văn bản
+function encrypt(publicKey, plaintext) {
+  const { e, n } = publicKey;
+  const encryptedMsg = [];
+  for (let i = 0; i < plaintext.length; i++) {
+    const charCode = plaintext.codePointAt(i); // Lấy mã Unicode của ký tự
+    encryptedMsg.push(bigInt(charCode).modPow(bigInt(e), bigInt(n)).toString());
+  }
+  return encryptedMsg;
+}
 let socket;
 function Chat() {
   const { setUserOnline } = useContext(Context);
@@ -38,6 +48,7 @@ function Chat() {
   const [data, setData] = useState([]);
   const [showAccount, setShowAccount] = useState(false);
   const [mainAccount, setMainAccount] = useState(user);
+  const [publicKey, setPublicKey] = useState(null);
 
   const hendleMainUser = (e) => {
     const { name, value } = e.target;
@@ -45,7 +56,14 @@ function Chat() {
   };
   useEffect(() => {
     socket = io("http://localhost:5000");
+
     socket.emit("join", { ...user, online: 1 });
+    socket.on("publicKey", (publicKey) => {
+      setPublicKey({
+        e: publicKey.e,
+        n: +publicKey.n,
+      });
+    });
     return () => {
       socket.disconnect();
     };
@@ -53,7 +71,6 @@ function Chat() {
 
   useEffect(() => {
     socket.on("user-online", (data) => {
-      console.log("user-online-chat", data);
       setUserOnline(data);
     });
   });
@@ -79,7 +96,7 @@ function Chat() {
         {
           idUser1: msg.from,
           idUser2: msg.to,
-          message: msg.message,
+          message: msg.decryptedMessage,
           createAt: new Date(),
         },
       ]);
@@ -88,10 +105,14 @@ function Chat() {
 
   const hendleSend = async () => {
     if (text) {
+      if (publicKey === null) return;
+
+      // Mã hóa văn bản
+      const encryptedMessage = encrypt(publicKey, text);
       socket.emit(`chat message`, {
         from: user.id,
         to: friend.id,
-        message: text,
+        message: encryptedMessage,
       });
       setData((prev) => [
         ...prev,
@@ -135,7 +156,6 @@ function Chat() {
     const isCheck = confirm("Bạn có chắc chắn muốn cập nhật thông tin không?");
     if (isCheck) {
       const response = await updateAccount(mainAccount);
-      console.log(response);
       if (response?.status === 200) {
         // dispatch(ACTIONS_APP.userLogin(response?.data[0]));
         toastMessage({
@@ -171,7 +191,9 @@ function Chat() {
                           {friend?.fullName ? friend.fullName : "Undefine"}
                         </h6>
                       </Link>
-                      <small>{friend?.online === 1 ?  "Online": "Offline"}</small>
+                      <small>
+                        {friend?.online === 1 ? "Online" : "Offline"}
+                      </small>
                     </div>
                   </div>
 
