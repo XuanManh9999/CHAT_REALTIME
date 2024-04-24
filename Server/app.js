@@ -1,19 +1,17 @@
 import express from "express";
-import NodeRSA from "node-rsa";
 import "dotenv/config";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { Server } from "socket.io";
 import configRoutes from "./routes/index.js";
 import hendleChat from "./hendleChat/index.js";
+import { publicKey, privateKey, decrypt, encrypt } from "./hendleRSA/index.js";
+
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-
-// Khởi tạo cặp khóa RSA
-const key = new NodeRSA({ b: 512 }); // Độ dài của khóa là 512 bits
 
 configRoutes(app);
 const server = app.listen(port, () => {
@@ -30,7 +28,8 @@ const io = new Server(server, {
     skipMiddlewares: true,
   },
 });
-hendleChat(io, key);
+
+hendleChat(io, publicKey, privateKey, decrypt, encrypt);
 
 /**
  * Khi bị ngắt kết nối không mong muốn (tức là không ngắt kết nối thủ công bằng socket.disconnect()), 
