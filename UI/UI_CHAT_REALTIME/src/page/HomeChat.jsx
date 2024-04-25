@@ -1,8 +1,8 @@
 import { PeopleList, Chat } from "../components";
 function HomeChat() {
   return (
-    <div className="container">
-      <div className="row">
+    <div className="container-lg">
+      <div className="row overflow-hidden">
         <PeopleList />
         <Chat />
       </div>

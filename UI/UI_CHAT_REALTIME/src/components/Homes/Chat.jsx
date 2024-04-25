@@ -11,7 +11,7 @@ import { io } from "socket.io-client";
 import { useEffect, useState, useContext } from "react";
 import { useSelector } from "react-redux";
 import { selectorFriend, selectorUser } from "../../redux/selector";
-import { getDataChat, createChat, updateAccount } from "../../api";
+import { getDataChat, createChat, updateAccount, login } from "../../api";
 import { toastMessage, Container } from "../../share";
 import { Context } from "../ContextApi/Context";
 
@@ -47,7 +47,16 @@ function Chat() {
   const [text, setText] = useState("");
   const [data, setData] = useState([]);
   const [showAccount, setShowAccount] = useState(false);
-  const [mainAccount, setMainAccount] = useState(user);
+  const [mainAccount, setMainAccount] = useState({
+    email: user?.email,
+    fullName: user?.fullName,
+    age: "",
+    avatar: "",
+    address: "",
+    phonenumber: "",
+    dateofbirth: "",
+    id: user?.id,
+  });
   const [publicKey, setPublicKey] = useState(null);
 
   const hendleMainUser = (e) => {
@@ -151,13 +160,12 @@ function Chat() {
     navigator("/");
   };
 
-  const hendleUpdateAccount = async () => {
+  const hendleUpdateAccount = async (e) => {
     e.preventDefault();
     const isCheck = confirm("Bạn có chắc chắn muốn cập nhật thông tin không?");
     if (isCheck) {
       const response = await updateAccount(mainAccount);
       if (response?.status === 200) {
-        // dispatch(ACTIONS_APP.userLogin(response?.data[0]));
         toastMessage({
           message: "Cập nhật thông tin thành công",
           state: "success",
@@ -168,8 +176,8 @@ function Chat() {
 
   return (
     <>
-      {user?.id && friend?.id && (
-        <div className="col-lg-9">
+      {user?.id && friend?.id ? (
+        <div className="col-lg-9 ">
           <div className="card chat-app">
             <div className="chat">
               <div className="chat-header">
@@ -275,80 +283,98 @@ function Chat() {
             </div>
           </div>
         </div>
+      ) : (
+        <div className="col-lg-9">
+          <img
+            style={{
+              width: "100%",
+              height: "100vh",
+              objectFit: "cover",
+            }}
+            src="https://s3.cloud.cmctelecom.vn/tinhte2/2019/12/4864637_cover_slack_telegram_tinhte.jpg"
+          />
+        </div>
       )}
       {showAccount && (
         <div className="overlay">
           <div className="update-form">
             <form>
-              <div className="form-group">
-                <label>Email</label>
+              <div className="form-group ">
+                <label htmlFor="email">Email</label>
                 <input
                   onChange={hendleMainUser}
                   type="email"
+                  id="email"
                   name="email"
                   value={mainAccount.email}
                   readOnly
-                  className="form-controlp"
+                  className="form-control"
                 />
               </div>
               <div className="form-group">
-                <label>fullName</label>
+                <label htmlFor="fullName">Full Name</label>
                 <input
                   onChange={hendleMainUser}
+                  id="fullName"
                   name="fullName"
                   type="text"
                   value={mainAccount.fullName}
-                  className="form-controlp"
+                  className="form-control"
                 />
               </div>
               <div className="form-group">
-                <label>Phone</label>
+                <label htmlFor="phonenumber">Phone</label>
                 <input
                   onChange={hendleMainUser}
+                  id="phonenumber"
                   name="phonenumber"
                   value={mainAccount.phonenumber ?? ""}
                   type="text"
-                  className="form-controlp"
+                  className="form-control"
                 />
               </div>
               <div className="form-group">
-                <label>DateOfBirth</label>
+                <label htmlFor="dateofbirth">Date Of Birth</label>
                 <input
                   onChange={hendleMainUser}
+                  id="dateofbirth"
                   name="dateofbirth"
                   value={mainAccount.dateofbirth ?? ""}
                   type="text"
-                  className="form-controlp"
+                  className="form-control"
                 />
               </div>
               <div className="form-group">
-                <label>Age</label>
+                <label htmlFor="age">Age</label>
                 <input
                   onChange={hendleMainUser}
+                  id="age"
                   name="age"
                   value={mainAccount.age ?? ""}
                   type="text"
-                  className="form-controlp"
+                  className="form-control"
                 />
               </div>
               <div className="form-group">
-                <label>Avatar</label>
+                <label htmlFor="avatar">Avatar</label>
                 <input
                   onChange={hendleMainUser}
                   type="text"
+                  id="avatar"
                   name="avatar"
                   value={mainAccount.avatar}
-                  className="form-controlp"
+                  className="form-control"
                 />
               </div>
               <div className="form-group">
-                <label>Address</label>
+                <label htmlFor="address">Address</label>
                 <input
                   onChange={hendleMainUser}
+                  id="address"
                   name="address"
                   value={mainAccount.address}
                   type="text"
-                  className="form-controlp"
+                  className="form-control"
                 />
               </div>
               <button
@@ -371,7 +397,7 @@ function Chat() {
                 onClick={() => setShowAccount(false)}
                 style={{ marginLeft: "10px" }}
               >
-                Cancel
+                Hủy
               </button>
             </form>
           </div>
