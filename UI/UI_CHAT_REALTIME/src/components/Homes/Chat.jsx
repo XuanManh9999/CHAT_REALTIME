@@ -68,6 +68,7 @@ function Chat() {
 
     socket.emit("join", { ...user, online: 1 });
     socket.on("publicKey", (publicKey) => {
+      console.log("Nhận được public key từ server: ", publicKey);
       setPublicKey({
         e: publicKey.e,
         n: +publicKey.n,
@@ -118,6 +119,7 @@ function Chat() {
 
       // Mã hóa văn bản
       const encryptedMessage = encrypt(publicKey, text);
+      console.log("Văn bản được mã hóa ở phía client: ", encryptedMessage);
       socket.emit(`chat message`, {
         from: user.id,
         to: friend.id,
