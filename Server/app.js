@@ -5,13 +5,18 @@ import cors from "cors";
 import { Server } from "socket.io";
 import configRoutes from "./routes/index.js";
 import hendleChat from "./hendleChat/index.js";
-import { publicKey, privateKey, decrypt, encrypt } from "./hendleRSA/index.js";
+import { publicKey, privateKey, decrypt } from "./hendleRSA/index.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.URL_CHAT,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 
 configRoutes(app);
 const server = app.listen(port, () => {
@@ -29,7 +34,7 @@ const io = new Server(server, {
   },
 });
 
-hendleChat(io, publicKey, privateKey, decrypt, encrypt);
+hendleChat(io, publicKey, privateKey, decrypt);
 
 /**
  * Khi bị ngắt kết nối không mong muốn (tức là không ngắt kết nối thủ công bằng socket.disconnect()), 

@@ -24,7 +24,7 @@ function randomPrime(min, max) {
 
 // Hàm tạo cặp khóa RSA
 function generateKeyPair() {
-  const p = randomPrime(50, 100); // Thay đổi phạm vi số nguyên tố để tăng độ an toàn
+  const p = randomPrime(50, 100);
   let q = randomPrime(50, 100);
   while (q === p) {
     q = randomPrime(50, 100);
@@ -49,17 +49,6 @@ function modInverse(a, m) {
   return null;
 }
 
-// Hàm mã hóa văn bản
-function encrypt(publicKey, plaintext) {
-  const { e, n } = publicKey;
-  const encryptedMsg = [];
-  for (let i = 0; i < plaintext.length; i++) {
-    const charCode = plaintext.codePointAt(i); // Lấy mã Unicode của ký tự
-    encryptedMsg.push(bigInt(charCode).modPow(bigInt(e), bigInt(n)).toString());
-  }
-  return encryptedMsg;
-}
-
 // Hàm giải mã văn bản
 function decrypt(privateKey, encryptedMsg) {
   const { d, n } = privateKey;
@@ -73,21 +62,7 @@ function decrypt(privateKey, encryptedMsg) {
   return decryptedMsg;
 }
 
-// Hàm tính lũy thừa modulo
-function modPow(base, exponent, modulus) {
-  let result = 1;
-  base %= modulus;
-  while (exponent > 0) {
-    if (exponent % 2 === 1) {
-      result = (result * base) % modulus;
-    }
-    base = (base * base) % modulus;
-    exponent >>= 1;
-  }
-  return result;
-}
-
 // Ví dụ sử dụng
 const { publicKey, privateKey } = generateKeyPair();
 
-export { publicKey, privateKey, encrypt, decrypt };
+export { publicKey, privateKey, decrypt };

@@ -1,4 +1,4 @@
-const hendleChat = (io, publicKey, privateKey, decrypt, encrypt) => {
+const hendleChat = (io, publicKey, privateKey, decrypt) => {
   let userUseApp = [];
   io.on("connection", (socket) => {
     console.log("A user connected");
@@ -15,8 +15,8 @@ const hendleChat = (io, publicKey, privateKey, decrypt, encrypt) => {
     socket.on("chat message", (data) => {
       const { from, to, message } = data;
       try {
+        console.log("Nhập tin nhắn từ client ở server", data);
         const decryptedMessage = decrypt(privateKey, message);
-        
         io.emit(`message-${to}`, { from, to, decryptedMessage });
       } catch (error) {
         console.error("Error decrypting message:", error);
